@@ -1,0 +1,82 @@
+html, body {
+    height: 100%;
+    width: 100vw;
+    margin: 0px;
+    font-family: 'Poppins', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@font-face { 
+    font-family: 'Poppins'; 
+	src: url('./fonts/Poppins-Regular.ttf'); 
+} 
+
+@font-face { 
+    font-family: 'Pokemon'; 
+	src: url('./fonts/Pokemon-Classic.ttf'); 
+} 
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+/* Splash Screen */
+
+.half-container {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    padding: max(45px);
+}
+
+.title {
+    width: min(230px);
+    height: 106px;
+}
+
+.splash-screen.image {
+    background-image: url('./imgs/splashscreen.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.start-button {
+    padding: 15px 12px;
+    color: #fff;
+    background-color: #0da31e;
+    border-radius: 15px;
+    outline: 0;
+    border: 0;
+    font-family: 'Poppins';
+    font-size: 20px;
+}
+
+/* Dialog */
+.dialog-box {
+    background-image: url('./imgs/dialog-box.png');
+    font-size: 12px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    font-family: 'Pokemon';
+    min-width: 320px;
+    min-height: 64px;
+}
+
+.dialog-box > * {
+    padding-left: 1em;
+    padding-top: 0.5em;
+}
