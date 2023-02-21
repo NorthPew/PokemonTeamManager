@@ -3,15 +3,21 @@ const startButton = document.querySelector('.start-button')
 
 const dialogText = document.querySelector('.dialog-text')
 
-let introState = {
-    hasPlayerSeenIntro: false
-}
-
 const LS_KEY1 = 'intro-state'
 
-let introStateToString = JSON.stringify(introState)
 
-localStorage.setItem(LS_KEY1, introStateToString)
+// Om den inte finner en nyckel med det namnet, gör en ny en
+if (!localStorage.getItem(LS_KEY1)) {
+    let introState = {
+        hasPlayerSeenIntro: false
+    }
+    
+    const LS_KEY1 = 'intro-state'
+    
+    let introStateToString = JSON.stringify(introState)
+    
+    localStorage.setItem(LS_KEY1, introStateToString)
+}
 
 
 const containers = {
@@ -21,7 +27,7 @@ const containers = {
 }
 
 const textsForIntro = {
-    hello: 'Hello there!  (Press Enter)',
+    hello: 'Hello there!  (Click)',
     welcome: 'Welcome to the world of Pokémon!',
     oak: 'My name is Oak. People call me the Pokémon Prof.',
     world: 'This world is inhabited by creatures that we call Pokémon.',
@@ -37,52 +43,64 @@ dialogText.textContent = textsForIntro.hello
 
 startButton.addEventListener('click', event => {
     containers.splash.classList.add('hidden')
-    containers.intro.classList.remove('hidden')
+
+    let test = localStorage.getItem(LS_KEY1)
+    let tested = JSON.parse(test)
+
+    console.log(tested);
+
+    if (tested.hasPlayerSeenIntro == false) {
+        containers.intro.classList.remove('hidden')
+    } else {
+        containers.game.classList.remove('hidden')
+    }
+    
 })
 
-if (containers.intro.classList.contains == 'hidden') {
+let stateFromLS = localStorage.getItem(LS_KEY1)
+let tested = JSON.parse(stateFromLS)
 
-} else {
-    document.body.addEventListener('keydown', event => {
-        setTimeout(() => {
-        if (event.key == 'Enter') {
-                switch (dialogText.textContent) {
-                    case textsForIntro.hello:
-                        enterKeySound.play()
-                        dialogText.textContent = textsForIntro.welcome
-                        break;
-                    case textsForIntro.welcome:
-                        enterKeySound.play()
-                        dialogText.textContent = textsForIntro.oak
-                        break;
-                    case textsForIntro.oak:
-                        enterKeySound.play()
-                        dialogText.textContent = textsForIntro.world
-                        break;
-                    case textsForIntro.world:
-                        enterKeySound.play()
-                        dialogText.textContent = textsForIntro.pets
-                        break;
-                    case textsForIntro.pets:
-                        enterKeySound.play()
-                        dialogText.textContent = textsForIntro.myself
-                        break;
-                    case textsForIntro.myself:
-                        enterKeySound.play()
-                        dialogText.textContent = textsForIntro.enough
-                        break;
-                    case textsForIntro.enough:
-                        containers.intro.classList.add('hidden')
-                        setTimeout(() => {
-                            containers.game.classList.remove('hidden')
-                        }, 100)
-                        introState = {
-                            hasPlayerSeenIntro: true
-                        }
-                        break;
-                }
-            }
-        }, 800)
-    })
+let saveNewIntroStateLS = () => {
+    const introState = {
+        hasPlayerSeenIntro: true
+    }
+    
+    let introStateToString = JSON.stringify(introState)
+    
+    localStorage.setItem(LS_KEY1, introStateToString)
 }
 
+let introStartDialogs = () => {
+    enterKeySound.play()
+    switch (dialogText.textContent) {
+        case textsForIntro.hello:
+            
+            dialogText.textContent = textsForIntro.welcome
+            break;
+        case textsForIntro.welcome:
+            dialogText.textContent = textsForIntro.oak
+            break;
+        case textsForIntro.oak:
+            dialogText.textContent = textsForIntro.world
+            break;
+        case textsForIntro.world:
+            dialogText.textContent = textsForIntro.pets
+            break;
+        case textsForIntro.pets:
+            dialogText.textContent = textsForIntro.myself
+            break;
+        case textsForIntro.myself:
+            dialogText.textContent = textsForIntro.enough
+            break;
+        case textsForIntro.enough:
+            containers.intro.classList.add('hidden')
+            setTimeout(() => {
+                containers.game.classList.remove('hidden')
+            }, 100)
+            saveNewIntroStateLS()
+    }
+}
+
+    containers.intro.addEventListener('click', event => {
+        introStartDialogs()
+    })
