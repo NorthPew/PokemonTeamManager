@@ -27,7 +27,6 @@ html, body {
     flex-flow: column wrap;
 }
 
-
 .hidden {
     display: none;
     visibility: hidden;
@@ -44,13 +43,10 @@ html, body {
     padding: max(45px);
 }
 
-
 .title {
     width: min(230px);
     height: 106px;
 }
-
-
 
 .splash-screen.image {
     background-image: url('./imgs/splashscreen.png');
@@ -69,6 +65,10 @@ html, body {
     font-size: 20px;
 }
 
+.start-button:hover {
+    background-color: #11b924;
+}
+
 /* Intro */
 
 .oak {
@@ -76,8 +76,12 @@ html, body {
     height: 150px;
 }
 
-.half-container.intro {
+.half-container--no-padding {
     padding: 0px;
+}
+
+.half-container.intro {
+
     background-image: url('./imgs/intro.png');
     background-repeat: no-repeat;
     background-size: cover;
@@ -102,4 +106,40 @@ html, body {
     padding-left: 1.2em;
     margin-top: 0.5em;
     padding-right: 1.85em;
+}
+
+/* Game */
+.stadium {
+    background-image: url('./imgs/stadium.png');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    justify-content: flex-end;
+    padding-bottom: 2em;
+    align-items: flex-end;
+    padding-right: 2em;
+}
+
+.action-panel {
+    background-color: #fff;
+    border-radius: 15px 15px 0px 0px;
+}
+
+.pokemon-boxes {
+    display: flex;
+    flex-flow: row wrap;
+    list-style: none;
+    padding: 0px;
+}
+
+.pokemon-boxes > * {
+    padding: 7.5px;
+}
+
+.pokemon-button {
+    outline: none;
+    border: none;
+    border-radius: 7.5px;
+    width: 75px;
+    height: 75px;
+    color: #11b924;
 }

@@ -8,10 +8,12 @@
     <script src="main.js" type="module"></script>
     <link rel="stylesheet" href="style.css" />
     <link rel="shortcut icon" href="./imgs/icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <!-- Main Container -->
     <section class="main-container container">
+
         <!-- Splash Screen -->
         <section class="splash-screen container image">
             <div class="half-container">
@@ -21,17 +23,39 @@
                 <button class="start-button">Start game</button>
             </div>
         </section>
+
         <!-- Intro -->
         <section class="intro-screen container hidden">
-            <div class="half-container intro oak-sprite">
+            <div class="half-container intro oak-sprite half-container--no-padding">
                 <img class="oak" src="./imgs/oak.png" alt="Prof Oak">
             </div>
-            <div class="half-container action intro">
+            <div class="half-container intro half-container--no-padding">
                 <section class="dialog-box">
                     <p class="dialog-text"></p>
                 </section>
             </div>
         </section>
+
+        <!-- Game Screen -->
+        <section class="game-screen container hidden">
+            <div class="half-container stadium half-container--no-padding">
+                <button class="open-add-pokemons-screen"><span class="material-symbols-outlined">add</span></button>
+            </div>
+            <div class="half-container half-container--no-padding action-panel">
+                <ul class="pokemon-boxes">
+                    <li>
+                        <button class="pokemon-button"><span class="material-symbols-outlined">add</span></button>
+                    </li>
+                    <li>
+                        <button class="pokemon-button"><span class="material-symbols-outlined">add</span></button>
+                    </li>
+                    <li>
+                        <button class="pokemon-button"><span class="material-symbols-outlined">add</span></button>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        
     </section>
 </body>
 </html>

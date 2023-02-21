@@ -3,11 +3,21 @@ const startButton = document.querySelector('.start-button')
 
 const dialogText = document.querySelector('.dialog-text')
 
+let introState = {
+    hasPlayerSeenIntro: false
+}
+
+const LS_KEY1 = 'intro-state'
+
+let introStateToString = JSON.stringify(introState)
+
+localStorage.setItem(LS_KEY1, introStateToString)
 
 
 const containers = {
     splash: document.querySelector('.splash-screen'),
-    intro: document.querySelector('.intro-screen')
+    intro: document.querySelector('.intro-screen'),
+    game: document.querySelector('.game-screen')
 }
 
 const textsForIntro = {
@@ -24,18 +34,15 @@ const enterKeySound = new Audio('./keypress.wav')
 
 dialogText.textContent = textsForIntro.hello
 
-const introStart = () => {
-
-}
-
 
 startButton.addEventListener('click', event => {
     containers.splash.classList.add('hidden')
     containers.intro.classList.remove('hidden')
-    introStart()
 })
 
-if (containers.intro.classList.contains !== 'hidden') {
+if (containers.intro.classList.contains == 'hidden') {
+
+} else {
     document.body.addEventListener('keydown', event => {
         setTimeout(() => {
         if (event.key == 'Enter') {
@@ -66,6 +73,12 @@ if (containers.intro.classList.contains !== 'hidden') {
                         break;
                     case textsForIntro.enough:
                         containers.intro.classList.add('hidden')
+                        setTimeout(() => {
+                            containers.game.classList.remove('hidden')
+                        }, 100)
+                        introState = {
+                            hasPlayerSeenIntro: true
+                        }
                         break;
                 }
             }
