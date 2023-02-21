@@ -3,6 +3,7 @@ html, body {
     width: 100vw;
     margin: 0px;
     font-family: 'Poppins', sans-serif;
+    background-color: #000;
 }
 
 * {
@@ -43,10 +44,13 @@ html, body {
     padding: max(45px);
 }
 
+
 .title {
     width: min(230px);
     height: 106px;
 }
+
+
 
 .splash-screen.image {
     background-image: url('./imgs/splashscreen.png');
@@ -65,18 +69,37 @@ html, body {
     font-size: 20px;
 }
 
-/* Dialog */
+/* Intro */
+
+.oak {
+    width: min(90px);
+    height: 150px;
+}
+
+.half-container.intro {
+    padding: 0px;
+    background-image: url('./imgs/intro.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.half-container.oak-sprite {
+    justify-content: center;
+}
+
 .dialog-box {
     background-image: url('./imgs/dialog-box.png');
     font-size: 12px;
     background-repeat: no-repeat;
-    background-size: contain;
+    object-fit: fill;
+    background-size: 100% 78px;
     font-family: 'Pokemon';
     min-width: 320px;
-    min-height: 64px;
+    min-height: 78px;
 }
 
 .dialog-box > * {
-    padding-left: 1em;
-    padding-top: 0.5em;
+    padding-left: 1.2em;
+    margin-top: 0.5em;
+    padding-right: 1.85em;
 }
