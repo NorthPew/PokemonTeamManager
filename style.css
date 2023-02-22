@@ -8,7 +8,25 @@ html, body {
 
 * {
     box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #a6a6a6 #c7c7c7;
 }
+
+    /* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+        width: 16px;
+}
+    
+*::-webkit-scrollbar-track {
+        background: #c7c7c7;
+}
+    
+*::-webkit-scrollbar-thumb {
+        background-color: #a6a6a6;
+        border-radius: 10px;
+        border: 3px none #ffffff;
+}
+
 
 @font-face { 
     font-family: 'Poppins'; 
@@ -126,14 +144,25 @@ html, body {
 
 .selected-pokemons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 9.5em);
+    grid-template-columns: repeat(auto-fit, 13em);
     padding: 0px;
     list-style: none;
     justify-content: center;
+    overflow: auto;
+    overflow-x: hidden;
 }
 
 .selected-pokemons > * {
-    padding: 7.5px;
+    margin: 1em;
+    text-align: center;
+    border: 0.5px solid #000;
+    border-radius: 7.5px;
+    height: 222px;
+}
+
+.selected-pokemons h1 {
+    margin: 0px;
+    padding: 0px;
 }
 
 .half-container--align-unset {

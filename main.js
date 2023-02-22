@@ -1,5 +1,6 @@
-const startButton = document.querySelector('#start-game-button')
+/// START ///
 
+const startButton = document.querySelector('#start-game-button')
 
 const dialogText = document.querySelector('.dialog-text')
 
@@ -20,12 +21,16 @@ if (!localStorage.getItem(LS_KEY1)) {
 }
 
 
+// Alla screens som finns till projektet
 const containers = {
     splash: document.querySelector('.splash-screen'),
     intro: document.querySelector('.intro-screen'),
     game: document.querySelector('.game-screen'),
     add: document.querySelector('.add-pokemon-screen')
 }
+
+
+/// INTRO ///
 
 const textsForIntro = {
     hello: 'Hello there! (Click)',
@@ -75,7 +80,6 @@ let introStartDialogs = () => {
     enterKeySound.play()
     switch (dialogText.textContent) {
         case textsForIntro.hello:
-            
             dialogText.textContent = textsForIntro.welcome
             break;
         case textsForIntro.welcome:
@@ -106,6 +110,8 @@ let introStartDialogs = () => {
         introStartDialogs()
     })
 
+/// GAME ///
+
 
 const openAddPokemonScreen = document.querySelector('#open-add-pokemon-screen-button')
 
@@ -120,80 +126,156 @@ const savePokemonToUl = document.querySelector('.selected-pokemons')
 
 const searchForPokemon = document.querySelector('#search-for-pokemon')
 searchForPokemon.addEventListener('keydown', async event => {
-    if(event.key == 'Enter') {
 
-        const url = `https://pokeapi.co/api/v2/pokemon/${searchForPokemon.value}`
 
-        const response = await fetch(url, {})
-        const data = await response.json()
+    // Kollar ul listan om det finns fler än 3 element i listan
+    if (savePokemonToUl.childElementCount < 3) {
+        if(event.key == 'Enter') {
 
-        let savedPokemons
-
-        if (localStorage.getItem(LS_KEY2) == null) {
-            savedPokemons = []
-        } else {
-            savedPokemons = JSON.parse(localStorage.getItem(LS_KEY2))
-        }
-
-        if (savedPokemons.find(pokemon => pokemon.name == data.name)) {
-
-        } else {
-            savedPokemons.push(data)
-        }
-
-        const arrayAsString = JSON.stringify(savedPokemons)
+            const url = `https://pokeapi.co/api/v2/pokemon/${searchForPokemon.value}`
     
-        localStorage.setItem(LS_KEY2, arrayAsString)
+            const response = await fetch(url, {})
+            const data = await response.json()
+    
+            let savedPokemons
+    
+            if (localStorage.getItem(LS_KEY2) == null) {
+                savedPokemons = []
+            } else {
+                savedPokemons = JSON.parse(localStorage.getItem(LS_KEY2))
+            }
+    
+            if (savedPokemons.find(pokemon => pokemon.name == data.name)) {
+    
+            } else {
+                savedPokemons.push(data)
+            }
+    
+            const arrayAsString = JSON.stringify(savedPokemons)
+        
+            localStorage.setItem(LS_KEY2, arrayAsString)
+    
+            addNewPokemonToUl()
 
-        addNewPokemonToUl()
+            searchForPokemon.value = ''
+        }
+    } else {
+        console.log('Du får inte ha mer än 3 pokemons!');
     }
-
 })
 
 const addNewPokemonToUl = () => {
 
+
+    // Gör så att det blir inga dubbletter
+    savePokemonToUl.innerHTML = ''
+
+
+    // Denna gör så att man kan få värderna från localstorage och applicerar dem på en lista (ul)
     for (let pokemon of JSON.parse(localStorage.getItem(LS_KEY2))) {
+
+        // Variabler
         let newLi = document.createElement('li')
 
         let newSprite = document.createElement('img')
 
         let newNameHeading = document.createElement('h1')
 
-        newSprite.src = pokemon.sprites.front_default
 
+        // Knappar
+        let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button')
+
+
+        // Namn och ikoner för knapparna
+        deleteButton.innerHTML = `<span class="material-symbols-outlined">remove</span>`
+        deleteButton.title = 'Remove member'
+
+        changeOrderToBottom.innerHTML =  `<span class="material-symbols-outlined">
+        arrow_downward
+        </span>`
+        changeOrderToBottom.title = 'Move to bottom'
+
+        changeOrderToTop.innerHTML = `<span class="material-symbols-outlined">
+        arrow_upward
+        </span>`
+        changeOrderToTop.title = 'Move to top'
+
+        changeNameOfPokemon.innerHTML = `<span class="material-symbols-outlined">
+        favorite
+        </span>`
+        changeNameOfPokemon.title = 'Change member name'
+
+        console.log(newLi.childElementCount);
+
+        // Ta bort pokemon från ul listan och från localstorage och sparar den nya listan istället
+        deleteButton.addEventListener('click', () => {
+            newLi.remove()
+
+            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEY2)).filter(result => result.name !== newNameHeading.textContent)
+
+            const saveNewString = JSON.stringify(saveFilterResult)
+
+            localStorage.setItem(LS_KEY2, saveNewString)
+
+        })
+
+        changeNameOfPokemon.addEventListener('click', () => {
+            let changeNameInput = document.createElement('input')
+            changeNameInput.type = 'text'
+            newLi.append(changeNameInput)
+
+            changeNameInput.addEventListener('keydown', event => {
+                if(event.key == 'Enter') {
+
+                    if (changeNameInput.value !== '') {
+                        console.log(changeNameInput.value);
+                        newNameHeading.textContent = `"${changeNameInput.value}"`
+
+                        changeNameInput.remove()
+                    } else {
+                        newNameHeading.textContent = pokemon.name
+                    }
+                }
+            })
+        })
+
+
+        // Använder metoden prepend för att få upp ett element först i listan
+        changeOrderToTop.addEventListener('click', () => {
+            savePokemonToUl.prepend(newLi)
+        })
+
+
+        // Använder metoden append för att få elementet sist i listan
+        changeOrderToBottom.addEventListener('click', () => {
+            savePokemonToUl.append(newLi)
+        })
+
+
+        // Gör så att man kan få namnet och bilden för en specifik pokemon
         newNameHeading.textContent = pokemon.name
 
+        newSprite.src = pokemon.sprites.front_default
+
         newLi.append(newSprite, newNameHeading)
-        
 
-        savePokemonToUl.append(newLi)
 
+        // En typ av funktion som sätter dit alla abilities i en lista
         pokemon.abilities.forEach(element => {
-            console.log(element.ability.name);
             let newAbilitiesLegend = document.createElement('legend')
     
             newAbilitiesLegend.textContent = element.ability.name
             newLi.append(newAbilitiesLegend)
         });
-    
-        savePokemonToUl.append(newLi)
+
+        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom)
         
+        savePokemonToUl.append(newLi)
     }
-
-
-
-
-
-
-
-
-
-/*
-
-    */
 }
 
 
+// Gör så att listan ska visas
 if(localStorage.getItem(LS_KEY2) !== null){
     addNewPokemonToUl()
 }
