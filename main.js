@@ -126,12 +126,26 @@ searchForPokemon.addEventListener('keydown', async event => {
 
         const response = await fetch(url, {})
         const data = await response.json()
-        
-        const dataToString = JSON.stringify(data)
-    
-        localStorage.setItem(LS_KEY2, dataToString)
 
-        addNewPokemonToUl(data)
+        let savedPokemons
+
+        if (localStorage.getItem(LS_KEY2) == null) {
+            savedPokemons = []
+        } else {
+            savedPokemons = JSON.parse(localStorage.getItem(LS_KEY2))
+        }
+
+        if (savedPokemons.find(pokemon => pokemon.name == data.name)) {
+
+        } else {
+            savedPokemons.push(data)
+        }
+
+        const arrayAsString = JSON.stringify(savedPokemons)
+    
+        localStorage.setItem(LS_KEY2, arrayAsString)
+
+        addNewPokemonToUl()
     }
 
 })
@@ -155,19 +169,24 @@ const addNewPokemonToUl = () => {
 
     savePokemonToUl.append(newLi)
 
+
+    /*
     newSprite.src = pokemonStringToArray.sprites.front_default
+    */
     newNameLegend.textContent = pokemonStringToArray.name
     
-    pokemonStringToArray.abilities.forEach(element => {
+    newLi.append(newSprite)
+    newLi.append(newNameLegend)
+
+   /* pokemonStringToArray.abilities.forEach(element => {
         console.log(element.ability.name);
         let newAbilitiesLegend = document.createElement('legend')
 
         newAbilitiesLegend.textContent = element.ability.name
         newLi.append(newAbilitiesLegend)
-    });
+    }); */
 
-    newLi.append(newSprite)
-    newLi.append(newNameLegend)
+
     
 
     savePokemonToUl.append(newLi)
