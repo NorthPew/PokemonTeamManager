@@ -121,18 +121,19 @@ openAddPokemonScreen.addEventListener('click', event => {
 })
 
 const LS_KEY2 = 'saving-pokemon'
+const LS_KEY3 = 'list-all-pokemons'
 
 const savePokemonToUl = document.querySelector('.selected-pokemons')
 
-const searchForPokemon = document.querySelector('#search-for-pokemon')
-searchForPokemon.addEventListener('keydown', async event => {
+const quickSearchForPokemon = document.querySelector('#quick-search-for-pokemon')
+quickSearchForPokemon.addEventListener('keydown', async event => {
 
 
     // Kollar ul listan om det finns fler än 3 element i listan
     if (savePokemonToUl.childElementCount < 3) {
         if(event.key == 'Enter') {
 
-            const url = `https://pokeapi.co/api/v2/pokemon/${searchForPokemon.value}`
+            const url = `https://pokeapi.co/api/v2/pokemon/${quickSearchForPokemon.value}`
     
             const response = await fetch(url, {})
             const data = await response.json()
@@ -157,12 +158,43 @@ searchForPokemon.addEventListener('keydown', async event => {
     
             addNewPokemonToUl()
 
-            searchForPokemon.value = ''
+            quickSearchForPokemon.value = ''
         }
     } else {
         console.log('Du får inte ha mer än 3 pokemons!');
     }
 })
+
+
+const searchForPokemons = document.querySelector('#search-for-pokemons')
+searchForPokemons.addEventListener('keydown', () => {
+    
+})
+
+const listAllPokemons = async () => {
+
+    const listAllPokemons = document.querySelector('#list-all-pokemons')
+
+    if(localStorage.getItem(LS_KEY3) == null) {
+        const url = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`
+        const response = await fetch(url, {})
+        const data = await response.json()
+
+        const dataAsString = JSON.stringify(data)
+        localStorage.setItem(LS_KEY3, dataAsString)
+
+    } else {
+        let showAllResults = JSON.parse(localStorage.getItem(LS_KEY3)).results
+
+        for (let pokemon of showAllResults) {
+            let newListElem = document.createElement('li')
+            newListElem.textContent = pokemon.name
+            listAllPokemons.append(newListElem)
+        }
+    }
+}
+
+listAllPokemons()
 
 const addNewPokemonToUl = () => {
 
@@ -185,6 +217,7 @@ const addNewPokemonToUl = () => {
         // Knappar
         let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button')
 
+        let emptyDiv = document.createElement('div')
 
         // Namn och ikoner för knapparna
         deleteButton.innerHTML = `<span class="material-symbols-outlined">remove</span>`
@@ -205,8 +238,6 @@ const addNewPokemonToUl = () => {
         </span>`
         changeNameOfPokemon.title = 'Change member name'
 
-        console.log(newLi.childElementCount);
-
         // Ta bort pokemon från ul listan och från localstorage och sparar den nya listan istället
         deleteButton.addEventListener('click', () => {
             newLi.remove()
@@ -220,23 +251,29 @@ const addNewPokemonToUl = () => {
         })
 
         changeNameOfPokemon.addEventListener('click', () => {
-            let changeNameInput = document.createElement('input')
-            changeNameInput.type = 'text'
-            newLi.append(changeNameInput)
+            let changeNameInput
+            if (emptyDiv.childElementCount < 1) {
+                changeNameInput = document.createElement('input')
+                changeNameInput.type = 'text'
+                changeNameInput.placeholder = pokemon.name
+                emptyDiv.append(changeNameInput)
+                changeNameInput.addEventListener('keydown', event => {
+                    if(event.key == 'Enter') {
+                        if (changeNameInput.value !== '') {
+                            console.log(changeNameInput.value);
+                            newNameHeading.textContent = `"${changeNameInput.value}"`
 
-            changeNameInput.addEventListener('keydown', event => {
-                if(event.key == 'Enter') {
+                            changeNameInput.remove()
+                        } else {
+                            newNameHeading.textContent = pokemon.name
 
-                    if (changeNameInput.value !== '') {
-                        console.log(changeNameInput.value);
-                        newNameHeading.textContent = `"${changeNameInput.value}"`
-
-                        changeNameInput.remove()
-                    } else {
-                        newNameHeading.textContent = pokemon.name
+                            changeNameInput.remove()
+                        }
                     }
-                }
-            })
+                })
+            } else {
+                emptyDiv.innerHTML = ''
+            }
         })
 
 
@@ -268,7 +305,7 @@ const addNewPokemonToUl = () => {
             newLi.append(newAbilitiesLegend)
         });
 
-        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom)
+        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom, emptyDiv)
         
         savePokemonToUl.append(newLi)
     }

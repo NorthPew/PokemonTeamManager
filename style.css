@@ -157,7 +157,7 @@ html, body {
     text-align: center;
     border: 0.5px solid #000;
     border-radius: 7.5px;
-    height: 222px;
+    height: 246px;
 }
 
 .selected-pokemons h1 {
@@ -181,7 +181,7 @@ html, body {
 /* Add pokemons */
 .panel {
     background-color: #f1f1f1;
-    color: 000;
+    color: #000;
     border-radius: 15px 15px;
 }
 
@@ -200,4 +200,11 @@ html, body {
     border: none;
     padding: 5px;
     outline: 1px;
+}
+
+#list-all-pokemons {
+    overflow: auto;
+    overflow-x: hidden;
+    height: 400px;
+    min-width: 320px;
 }
