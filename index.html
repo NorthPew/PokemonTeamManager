@@ -41,27 +41,16 @@
             <div class="half-container stadium half-container--no-padding">
                 <button class="action-button" id="open-add-pokemon-screen-button"><span class="material-symbols-outlined">add</span></button>
             </div>
-            <div class="half-container half-container--no-padding action-panel">
-                <ul class="pokemon-boxes">
-                    <li>
-                        <button class="pokemon-button"><span class="material-symbols-outlined">add</span></button>
-                    </li>
-                    <li>
-                        <button class="pokemon-button"><span class="material-symbols-outlined">add</span></button>
-                    </li>
-                    <li>
-                        <button class="pokemon-button"><span class="material-symbols-outlined">add</span></button>
-                    </li>
+            <div class="half-container half-container--no-padding half-container--align-unset action-panel">
+                <ul class="selected-pokemons">
                 </ul>
             </div>
         </section>
 
         <!-- Add Pokemon Screen -->
         <section class="add-pokemon-screen container panel hidden">
-            <button class="close-button">X</button>
+            <button class="close-button" id="close-button-add-pokemon-screen">X</button>
             <input type="text" class="text-input" id="search-for-pokemon" placeholder="Write in name for a pokemon...">
-            <ul class="selected-pokemons">
-            </ul>
         </section>
 
     </section>

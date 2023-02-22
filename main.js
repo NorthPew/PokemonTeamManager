@@ -152,47 +152,57 @@ searchForPokemon.addEventListener('keydown', async event => {
 
 const addNewPokemonToUl = () => {
 
-    let newLi = document.createElement('li')
+    for (let pokemon of JSON.parse(localStorage.getItem(LS_KEY2))) {
+        let newLi = document.createElement('li')
 
-    let newNameLegend = document.createElement('legend')
+        let newSprite = document.createElement('img')
 
-    let newSprite = document.createElement('img')
+        let newNameHeading = document.createElement('h1')
 
-    console.log(localStorage.getItem(LS_KEY2));
+        newSprite.src = pokemon.sprites.front_default
 
-    const pokemonFromLocalStorage = localStorage.getItem(LS_KEY2)
+        newNameHeading.textContent = pokemon.name
 
-    const pokemonStringToArray = JSON.parse(pokemonFromLocalStorage)
+        newLi.append(newSprite, newNameHeading)
+        
 
+        savePokemonToUl.append(newLi)
+
+        pokemon.abilities.forEach(element => {
+            console.log(element.ability.name);
+            let newAbilitiesLegend = document.createElement('legend')
     
-    console.log(pokemonStringToArray.name)
+            newAbilitiesLegend.textContent = element.ability.name
+            newLi.append(newAbilitiesLegend)
+        });
+    
+        savePokemonToUl.append(newLi)
+        
+    }
 
-    savePokemonToUl.append(newLi)
 
 
-    /*
-    newSprite.src = pokemonStringToArray.sprites.front_default
+
+
+
+
+
+
+/*
+
     */
-    newNameLegend.textContent = pokemonStringToArray.name
-    
-    newLi.append(newSprite)
-    newLi.append(newNameLegend)
-
-   /* pokemonStringToArray.abilities.forEach(element => {
-        console.log(element.ability.name);
-        let newAbilitiesLegend = document.createElement('legend')
-
-        newAbilitiesLegend.textContent = element.ability.name
-        newLi.append(newAbilitiesLegend)
-    }); */
-
-
-    
-
-    savePokemonToUl.append(newLi)
 }
+
 
 if(localStorage.getItem(LS_KEY2) !== null){
     addNewPokemonToUl()
 }
+
+const closeButtonForAddPokemonScreen = document.querySelector('#close-button-add-pokemon-screen')
+
+closeButtonForAddPokemonScreen.addEventListener('click', () => {
+    containers.add.classList.add('hidden')
+    containers.game.classList.remove('hidden')
+})
+
 

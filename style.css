@@ -124,15 +124,20 @@ html, body {
     border-radius: 15px 15px 0px 0px;
 }
 
-.pokemon-boxes {
-    display: flex;
-    flex-flow: row wrap;
-    list-style: none;
+.selected-pokemons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 9.5em);
     padding: 0px;
+    list-style: none;
+    justify-content: center;
 }
 
-.pokemon-boxes > * {
+.selected-pokemons > * {
     padding: 7.5px;
+}
+
+.half-container--align-unset {
+    align-items: unset;
 }
 
 .pokemon-button {
