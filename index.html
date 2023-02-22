@@ -20,7 +20,7 @@
                 <img class="title" src="./imgs/title.png" alt="Title">
             </div>
             <div class="half-container">
-                <button class="start-button">Start game</button>
+                <button class="action-button" id="start-game-button">Start game</button>
             </div>
         </section>
 
@@ -39,7 +39,7 @@
         <!-- Game Screen -->
         <section class="game-screen container hidden">
             <div class="half-container stadium half-container--no-padding">
-                <button class="open-add-pokemons-screen"><span class="material-symbols-outlined">add</span></button>
+                <button class="action-button" id="open-add-pokemon-screen-button"><span class="material-symbols-outlined">add</span></button>
             </div>
             <div class="half-container half-container--no-padding action-panel">
                 <ul class="pokemon-boxes">
@@ -55,7 +55,15 @@
                 </ul>
             </div>
         </section>
-        
+
+        <!-- Add Pokemon Screen -->
+        <section class="add-pokemon-screen container panel hidden">
+            <button class="close-button">X</button>
+            <input type="text" class="text-input" id="search-for-pokemon" placeholder="Write in name for a pokemon...">
+            <ul class="selected-pokemons">
+            </ul>
+        </section>
+
     </section>
 </body>
 </html>

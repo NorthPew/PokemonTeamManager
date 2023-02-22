@@ -1,4 +1,4 @@
-const startButton = document.querySelector('.start-button')
+const startButton = document.querySelector('#start-game-button')
 
 
 const dialogText = document.querySelector('.dialog-text')
@@ -23,11 +23,12 @@ if (!localStorage.getItem(LS_KEY1)) {
 const containers = {
     splash: document.querySelector('.splash-screen'),
     intro: document.querySelector('.intro-screen'),
-    game: document.querySelector('.game-screen')
+    game: document.querySelector('.game-screen'),
+    add: document.querySelector('.add-pokemon-screen')
 }
 
 const textsForIntro = {
-    hello: 'Hello there!  (Click)',
+    hello: 'Hello there! (Click)',
     welcome: 'Welcome to the world of Pokémon!',
     oak: 'My name is Oak. People call me the Pokémon Prof.',
     world: 'This world is inhabited by creatures that we call Pokémon.',
@@ -104,3 +105,75 @@ let introStartDialogs = () => {
     containers.intro.addEventListener('click', event => {
         introStartDialogs()
     })
+
+
+const openAddPokemonScreen = document.querySelector('#open-add-pokemon-screen-button')
+
+openAddPokemonScreen.addEventListener('click', event => {
+    containers.game.classList.add('hidden')
+    containers.add.classList.remove('hidden')
+})
+
+const LS_KEY2 = 'saving-pokemon'
+
+const savePokemonToUl = document.querySelector('.selected-pokemons')
+
+const searchForPokemon = document.querySelector('#search-for-pokemon')
+searchForPokemon.addEventListener('keydown', async event => {
+    if(event.key == 'Enter') {
+
+        const url = `https://pokeapi.co/api/v2/pokemon/${searchForPokemon.value}`
+
+        const response = await fetch(url, {})
+        const data = await response.json()
+        
+        const dataToString = JSON.stringify(data)
+    
+        localStorage.setItem(LS_KEY2, dataToString)
+
+        addNewPokemonToUl(data)
+    }
+
+})
+
+const addNewPokemonToUl = () => {
+
+    let newLi = document.createElement('li')
+
+    let newNameLegend = document.createElement('legend')
+
+    let newSprite = document.createElement('img')
+
+    console.log(localStorage.getItem(LS_KEY2));
+
+    const pokemonFromLocalStorage = localStorage.getItem(LS_KEY2)
+
+    const pokemonStringToArray = JSON.parse(pokemonFromLocalStorage)
+
+    
+    console.log(pokemonStringToArray.name)
+
+    savePokemonToUl.append(newLi)
+
+    newSprite.src = pokemonStringToArray.sprites.front_default
+    newNameLegend.textContent = pokemonStringToArray.name
+    
+    pokemonStringToArray.abilities.forEach(element => {
+        console.log(element.ability.name);
+        let newAbilitiesLegend = document.createElement('legend')
+
+        newAbilitiesLegend.textContent = element.ability.name
+        newLi.append(newAbilitiesLegend)
+    });
+
+    newLi.append(newSprite)
+    newLi.append(newNameLegend)
+    
+
+    savePokemonToUl.append(newLi)
+}
+
+if(localStorage.getItem(LS_KEY2) !== null){
+    addNewPokemonToUl()
+}
+
