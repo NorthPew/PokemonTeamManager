@@ -197,7 +197,7 @@ searchBarForPokemons.addEventListener('keydown', () => {
     */
    
     const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results.forEach(pokemon => {
-        if(pokemon.name.match(searchBarForPokemons.value)) {
+        if(pokemon.name.includes(searchBarForPokemons.value)) {
             listAllPokemonsUl.innerHTML = ''
             displayAllPokemons(pokemon)
         }
@@ -212,7 +212,7 @@ searchBarForPokemons.addEventListener('keydown', () => {
 const SavedPokemonsInfo = async () => {
 
     if(localStorage.getItem(LS_KEY3) == null) {
-        const url = `https://pokeapi.co/api/v2/pokemon?limit=100&offset=0`
+        const url = `https://pokeapi.co/api/v2/pokemon?limit=1279&offset=0`
         const response = await fetch(url, {})
         const data = await response.json()
 
@@ -236,7 +236,7 @@ const displayAllPokemons = pokemon => {
     try {
         newImageElem.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${modifiedURL}`
     } catch {
-
+        console.log('Den pokemonen har ingen bild att visa');
     }
     newNameElem.textContent = pokemon.name
 
