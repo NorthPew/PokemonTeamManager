@@ -125,67 +125,84 @@ const LS_KEY3 = 'list-all-pokemons'
 
 const savePokemonToUl = document.querySelector('.selected-pokemons')
 
-const quickSearchForPokemon = document.querySelector('#quick-search-for-pokemon')
-quickSearchForPokemon.addEventListener('keydown', async event => {
-
-
-    // Kollar ul listan om det finns fler än 3 element i listan
+const addSearchResultToSavePokemon = async urlFromSearch => {
     if (savePokemonToUl.childElementCount < 3) {
-        if(event.key == 'Enter') {
+        const url = urlFromSearch
 
-            const url = `https://pokeapi.co/api/v2/pokemon/${quickSearchForPokemon.value}`
-    
-            const response = await fetch(url, {})
-            const data = await response.json()
-    
-            let savedPokemons
-    
-            if (localStorage.getItem(LS_KEY2) == null) {
-                savedPokemons = []
-            } else {
-                savedPokemons = JSON.parse(localStorage.getItem(LS_KEY2))
-            }
-    
-            if (savedPokemons.find(pokemon => pokemon.name == data.name)) {
-    
-            } else {
-                savedPokemons.push(data)
-            }
-    
-            const arrayAsString = JSON.stringify(savedPokemons)
-        
-            localStorage.setItem(LS_KEY2, arrayAsString)
-    
-            addNewPokemonToUl()
+        const response = await fetch(url, {})
+        const data = await response.json()
 
-            quickSearchForPokemon.value = ''
+        let savedPokemons
+
+        if (localStorage.getItem(LS_KEY2) == null) {
+            savedPokemons = []
+        } else {
+            savedPokemons = JSON.parse(localStorage.getItem(LS_KEY2))
         }
+        
+        // Om det finns redan pokemon med samma namn, lägg då inte till
+        if (savedPokemons.find(pokemon => pokemon.name == data.name)) {
+
+        } else {
+            savedPokemons.push(data)
+        }
+
+        const arrayAsString = JSON.stringify(savedPokemons)
+    
+        localStorage.setItem(LS_KEY2, arrayAsString)
+
+        addNewPokemonToUl()
+
+        quickSearchForPokemon.value = ''
     } else {
         console.log('Du får inte ha mer än 3 pokemons!');
     }
-})
+} 
+
 
 const listAllPokemonsUl = document.querySelector('#list-all-pokemons')
 
-const searchForPokemons = document.querySelector('#search-for-pokemons')
-searchForPokemons.addEventListener('keydown', () => {
-    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results.filter(searchForPokemonName => {
-        if (searchForPokemonName.name.match(searchForPokemons.value.toLowerCase()))  {
+const searchBarForPokemons = document.querySelector('#search-for-pokemons')
+searchBarForPokemons.addEventListener('keydown', () => {
+   /*
+    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results.filter(searchForPokemon => {
+        if (searchForPokemon.name.match(searchBarForPokemons.value.toLowerCase()))  {
             listAllPokemonsUl.innerHTML = ''
             let newListElem = document.createElement('li')
-            newListElem.textContent = searchForPokemonName.name
+            newListElem.textContent = searchForPokemon.name
             listAllPokemonsUl.append(newListElem)
+        } 
+    })
+    */
+/*
+    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results
+    for (let pokemon of getSearchResults) {
+        if(pokemon.name.match(searchBarForPokemons.value))  {
+            listAllPokemonsUl.innerHTML = ''
+            let newListElem = document.createElement('li')
+            newListElem.textContent = pokemon.name
+            listAllPokemonsUl.append(newListElem)
+        }
+    }
+    */
+   
+    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results.forEach(pokemon => {
+        if(pokemon.name.match(searchBarForPokemons.value)) {
+            listAllPokemonsUl.innerHTML = ''
+            displayAllPokemons(pokemon)
         }
     })
 
+    if (searchBarForPokemons.value == null) {
+        SavedPokemonsInfo()
+    }
+
 })
 
-const listAllPokemons = async () => {
-
-
+const SavedPokemonsInfo = async () => {
 
     if(localStorage.getItem(LS_KEY3) == null) {
-        const url = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`
+        const url = `https://pokeapi.co/api/v2/pokemon?limit=10&offset=0`
         const response = await fetch(url, {})
         const data = await response.json()
 
@@ -196,17 +213,39 @@ const listAllPokemons = async () => {
         let showAllResults = JSON.parse(localStorage.getItem(LS_KEY3)).results
 
         for (let pokemon of showAllResults) {
-            let newListElem = document.createElement('li')
-            newListElem.textContent = pokemon.name
-            listAllPokemonsUl.append(newListElem)
+            displayAllPokemons(pokemon)
         }
     }
 }
 
-listAllPokemons()
+const displayAllPokemons = pokemon => {
+    let newListElem = document.createElement('li'), newImageElem = document.createElement('img'), newNameElem = document.createElement('legend'), newButtonElem = document.createElement('button')
+            
+
+    let modifiedURL = pokemon.url.substring(34).replace('/', '.png')
+    try {
+        newImageElem.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${modifiedURL}`
+    } catch {
+
+    }
+    newNameElem.textContent = pokemon.name
+
+    newButtonElem.innerHTML = `<span class="material-symbols-outlined">
+    add
+    </span>`
+    newButtonElem.title = 'Add to team'
+
+    newButtonElem.addEventListener('click', event => {
+        addSearchResultToSavePokemon(pokemon.url)
+    })
+    
+    newListElem.append(newImageElem, newNameElem, newButtonElem)
+    listAllPokemonsUl.append(newListElem)
+}
+
+SavedPokemonsInfo()
 
 const addNewPokemonToUl = () => {
-
 
     // Gör så att det blir inga dubbletter
     savePokemonToUl.innerHTML = ''
@@ -319,7 +358,6 @@ const addNewPokemonToUl = () => {
         savePokemonToUl.append(newLi)
     }
 }
-
 
 // Gör så att listan ska visas
 if(localStorage.getItem(LS_KEY2) !== null){

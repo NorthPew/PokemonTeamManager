@@ -205,6 +205,21 @@ html, body {
 #list-all-pokemons {
     overflow: auto;
     overflow-x: hidden;
-    height: 400px;
+    height: 600px;
     min-width: 320px;
+    list-style: none;
+    grid-template-columns: repeat(auto-fit, 10em);
+    justify-content: center;
+    display: grid;
+    padding: 0px;
 }
+
+#list-all-pokemons > * {
+    text-align: center;
+    border: 0.5px solid #000;
+    border-radius: 7.5px;
+    width: 120px;
+    margin: 0.5em;
+    height: 175px;
+}
+
