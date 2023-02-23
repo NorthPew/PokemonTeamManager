@@ -165,15 +165,24 @@ quickSearchForPokemon.addEventListener('keydown', async event => {
     }
 })
 
+const listAllPokemonsUl = document.querySelector('#list-all-pokemons')
 
 const searchForPokemons = document.querySelector('#search-for-pokemons')
 searchForPokemons.addEventListener('keydown', () => {
-    
+    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results.filter(searchForPokemonName => {
+        if (searchForPokemonName.name.match(searchForPokemons.value.toLowerCase()))  {
+            listAllPokemonsUl.innerHTML = ''
+            let newListElem = document.createElement('li')
+            newListElem.textContent = searchForPokemonName.name
+            listAllPokemonsUl.append(newListElem)
+        }
+    })
+
 })
 
 const listAllPokemons = async () => {
 
-    const listAllPokemons = document.querySelector('#list-all-pokemons')
+
 
     if(localStorage.getItem(LS_KEY3) == null) {
         const url = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`
@@ -189,7 +198,7 @@ const listAllPokemons = async () => {
         for (let pokemon of showAllResults) {
             let newListElem = document.createElement('li')
             newListElem.textContent = pokemon.name
-            listAllPokemons.append(newListElem)
+            listAllPokemonsUl.append(newListElem)
         }
     }
 }

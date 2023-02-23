@@ -10,7 +10,7 @@ let list = [
 
 let newList = list.filter(idk => {
     console.log('inside filter', idk);
-    return idk.test == 'Hej'
+    return idk.test.match('Hej ')
 })
 
 console.log(newList);
