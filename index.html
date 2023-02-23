@@ -49,10 +49,14 @@
 
         <!-- Add Pokemon Screen -->
         <section class="add-pokemon-screen container panel hidden">
-            <button class="close-button" id="close-button-add-pokemon-screen">X</button>
-            <input type="text" class="text-input" placeholder="Write in letters for a pokemon..." id="search-for-pokemons">
-            <ul id="list-all-pokemons">
+            <div>
+                <button class="close-button" id="close-button-add-pokemon-screen">X</button>
+                <p>Number of team members:<span id="count-selected-pokemons"> </span> </p>
+            </div>
 
+            <input type="text" class="text-input" placeholder="Write in letters for a pokemon..." id="search-for-pokemons">
+            <div class="hidden" id="error-too-many-selected-pokemons"><p>Sorry! You can only have 3 members per team!</p></div>
+            <ul id="list-all-pokemons">
             </ul>
         </section>
 

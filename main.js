@@ -125,6 +125,8 @@ const LS_KEY3 = 'list-all-pokemons'
 
 const savePokemonToUl = document.querySelector('.selected-pokemons')
 
+const errorMSG = document.querySelector('#error-too-many-selected-pokemons')
+
 const addSearchResultToSavePokemon = async urlFromSearch => {
     if (savePokemonToUl.childElementCount < 3) {
         const url = urlFromSearch
@@ -152,12 +154,20 @@ const addSearchResultToSavePokemon = async urlFromSearch => {
         localStorage.setItem(LS_KEY2, arrayAsString)
 
         addNewPokemonToUl()
+        countTeamMembers()
 
-        quickSearchForPokemon.value = ''
+
+        errorMSG.classList.add('hidden')
+        searchBarForPokemons.value = ''
     } else {
         console.log('Du får inte ha mer än 3 pokemons!');
+        tooManyPokemonsErrorMSG()
     }
 } 
+
+const tooManyPokemonsErrorMSG = () => {
+    errorMSG.classList.toggle('hidden')
+}
 
 
 const listAllPokemonsUl = document.querySelector('#list-all-pokemons')
@@ -193,7 +203,7 @@ searchBarForPokemons.addEventListener('keydown', () => {
         }
     })
 
-    if (searchBarForPokemons.value == null) {
+    if (searchBarForPokemons.value == '' - length ) {
         SavedPokemonsInfo()
     }
 
@@ -202,7 +212,7 @@ searchBarForPokemons.addEventListener('keydown', () => {
 const SavedPokemonsInfo = async () => {
 
     if(localStorage.getItem(LS_KEY3) == null) {
-        const url = `https://pokeapi.co/api/v2/pokemon?limit=10&offset=0`
+        const url = `https://pokeapi.co/api/v2/pokemon?limit=100&offset=0`
         const response = await fetch(url, {})
         const data = await response.json()
 
@@ -290,6 +300,8 @@ const addNewPokemonToUl = () => {
         deleteButton.addEventListener('click', () => {
             newLi.remove()
 
+            countTeamMembers()
+
             const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEY2)).filter(result => result.name !== newNameHeading.textContent)
 
             const saveNewString = JSON.stringify(saveFilterResult)
@@ -370,5 +382,14 @@ closeButtonForAddPokemonScreen.addEventListener('click', () => {
     containers.add.classList.add('hidden')
     containers.game.classList.remove('hidden')
 })
+
+
+
+const countTeamMembers = () => {
+const countTeamMembersSpan = document.querySelector('#count-selected-pokemons')
+    countTeamMembersSpan.textContent = ` ${savePokemonToUl.childElementCount}`
+}
+
+countTeamMembers()
 
 
