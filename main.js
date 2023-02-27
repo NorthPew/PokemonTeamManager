@@ -147,12 +147,16 @@ const addSearchResultToSavePokemon = async urlFromSearch => {
             savedPokemons = JSON.parse(localStorage.getItem(LS_KEYS.KEY2))
         }
         
+        /*
         // Om det finns redan pokemon med samma namn, lägg då inte till
         if (savedPokemons.find(pokemon => pokemon.name == data.name)) {
 
         } else {
             savedPokemons.push(data)
         }
+        */
+
+        savedPokemons.push(data)
 
         const arrayAsString = JSON.stringify(savedPokemons)
     
@@ -188,12 +192,16 @@ const addSearchResultsToSaveReservePokemon = async urlFromSearch => {
             savedReservePokemons = JSON.parse(localStorage.getItem(LS_KEYS.KEY4))
         }
         
+        /*
         // Om det finns redan pokemon med samma namn, lägg då inte till
         if (savedReservePokemons.find(pokemon => pokemon.name == data.name)) {
 
         } else {
             savedReservePokemons.push(data)
         }
+        */
+
+        savedReservePokemons.push(data)
 
         const arrayAsString = JSON.stringify(savedReservePokemons)
     
@@ -599,7 +607,7 @@ const addNewReservePokemonToUl = () => {
             newLi.append(newAbilitiesLegend)
         });
 
-        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom, movePokemonFromReserves, emptyDiv)
+        newLi.append(deleteButton, changeOrderToTop, changeOrderToBottom, movePokemonFromReserves)
         
         saveReservePokemonToUl.append(newLi)
     }
