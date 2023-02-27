@@ -607,7 +607,7 @@ const addNewReservePokemonToUl = () => {
             newLi.append(newAbilitiesLegend)
         });
 
-        newLi.append(deleteButton, changeOrderToTop, changeOrderToBottom, movePokemonFromReserves)
+        newLi.append(deleteButton, movePokemonFromReserves)
         
         saveReservePokemonToUl.append(newLi)
     }
