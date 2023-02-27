@@ -42,8 +42,18 @@
                 <button class="action-button" id="open-add-pokemon-screen-button"><span class="material-symbols-outlined">add</span></button>
             </div>
             <div class="half-container half-container--no-padding half-container--align-unset action-panel">
-                <ul class="selected-pokemons">
-                </ul>
+                <div class="group">
+                    <h1>Ordinary Team</h1>
+                    <ul class="selected-pokemons">
+
+                    </ul>
+                </div>
+                <div class="group">
+                    <h1>Reserves</h1>
+                    <ul class="reserved-pokemons">
+
+                    </ul>
+                </div>
             </div>
         </section>
 
@@ -56,10 +66,10 @@
 
             <input type="text" class="text-input" placeholder="Write in letters for a pokemon..." id="search-for-pokemons">
             <div class="hidden" id="error-too-many-selected-pokemons"><p>Sorry! You can only have 3 members per team!</p></div>
+            <div class="hidden" id="alert-selected-pokemons"><p>Congratz! U have currently 3 members!</p></div>
             <ul id="list-all-pokemons">
             </ul>
         </section>
-
     </section>
 </body>
 </html>
