@@ -286,7 +286,7 @@ const displayAllPokemons = pokemon => {
     } catch {
         newImageElem.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${modifiedURL}`
     }
-    
+
     newNameElem.textContent = pokemon.name
 
     newButtonElem.innerHTML = `<span class="material-symbols-outlined">
@@ -330,7 +330,8 @@ const addNewPokemonToUl = () => {
 
 
         // Knappar
-        let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button')
+        let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button'),
+        movePokemonToReserves = document.createElement('button')
 
         let emptyDiv = document.createElement('div')
 
@@ -353,6 +354,10 @@ const addNewPokemonToUl = () => {
         </span>`
         changeNameOfPokemon.title = 'Change member name'
 
+        movePokemonToReserves.innerHTML = `<span class="material-symbols-outlined">
+        login
+        </span>`
+        movePokemonToReserves.title = 'Move to reserves'
         // Ta bort pokemon från ul listan och från localstorage och sparar den nya listan istället
         deleteButton.addEventListener('click', () => {
             newLi.remove()
@@ -367,6 +372,25 @@ const addNewPokemonToUl = () => {
 
             localStorage.setItem(LS_KEYS.KEY2, saveNewString)
 
+            tooManyInTeamErrorMSG.classList.add('hidden')
+
+        })
+
+        movePokemonToReserves.addEventListener('click' ,() => {
+            newLi.remove()
+
+            countTeamMembers()
+            tooManyPokemonsErrorMSG()
+            addSearchResultsToSaveReservePokemon(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+            alertMSG.classList.add('hidden')
+
+            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.name !== newNameHeading.textContent)
+
+            const saveNewString = JSON.stringify(saveFilterResult)
+
+            localStorage.setItem(LS_KEYS.KEY2, saveNewString)
+
+            tooManyInTeamErrorMSG.classList.add('hidden')
         })
 
         changeNameOfPokemon.addEventListener('click', () => {
@@ -424,11 +448,13 @@ const addNewPokemonToUl = () => {
             newLi.append(newAbilitiesLegend)
         });
 
-        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom, emptyDiv)
+        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom, movePokemonToReserves, emptyDiv)
         
         savePokemonToUl.append(newLi)
     }
 }
+
+const tooManyInTeamErrorMSG = document.querySelector('#error-too-many-pokemons')
 
 const addNewReservePokemonToUl = () => {
 
@@ -448,7 +474,8 @@ const addNewReservePokemonToUl = () => {
 
 
         // Knappar
-        let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button')
+        let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button'),
+        movePokemonFromReserves = document.createElement('button')
 
         let emptyDiv = document.createElement('div')
 
@@ -471,6 +498,11 @@ const addNewReservePokemonToUl = () => {
         </span>`
         changeNameOfPokemon.title = 'Change member name'
 
+        movePokemonFromReserves.innerHTML = `<span class="material-symbols-outlined">
+        logout
+        </span>`
+        movePokemonFromReserves.title = 'Move Reserve to ordinary team'
+
         // Ta bort pokemon från ul listan och från localstorage och sparar den nya listan istället
         deleteButton.addEventListener('click', () => {
             newLi.remove()
@@ -484,6 +516,31 @@ const addNewReservePokemonToUl = () => {
             const saveNewString = JSON.stringify(saveFilterResult)
 
             localStorage.setItem(LS_KEYS.KEY4, saveNewString)
+
+        })
+
+        movePokemonFromReserves.addEventListener('click' ,() => {
+
+            if (savePokemonToUl.childElementCount < 3) {
+                newLi.remove()
+
+                countTeamMembers()
+                tooManyPokemonsErrorMSG()
+                addSearchResultToSavePokemon(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+                alertMSG.classList.add('hidden')
+    
+                const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY4)).filter(result => result.name !== newNameHeading.textContent)
+    
+                const saveNewString = JSON.stringify(saveFilterResult)
+    
+                localStorage.setItem(LS_KEYS.KEY4, saveNewString)
+
+                tooManyInTeamErrorMSG.classList.add('hidden')
+            } else {
+                console.log("Can't add pokemon to team!");
+                tooManyInTeamErrorMSG.classList.remove('hidden')
+
+            }
 
         })
 
@@ -542,7 +599,7 @@ const addNewReservePokemonToUl = () => {
             newLi.append(newAbilitiesLegend)
         });
 
-        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom, emptyDiv)
+        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom, movePokemonFromReserves, emptyDiv)
         
         saveReservePokemonToUl.append(newLi)
     }
