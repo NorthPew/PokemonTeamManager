@@ -229,7 +229,7 @@ const tooManyPokemonsErrorMSG = () => {
 const listAllPokemonsUl = document.querySelector('#list-all-pokemons')
 
 const searchBarForPokemons = document.querySelector('#search-for-pokemons')
-searchBarForPokemons.addEventListener('keydown', () => {
+searchBarForPokemons.addEventListener('keyup', () => {
    /*
     const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results.filter(searchForPokemon => {
         if (searchForPokemon.name.match(searchBarForPokemons.value.toLowerCase()))  {
@@ -252,9 +252,11 @@ searchBarForPokemons.addEventListener('keydown', () => {
     }
     */
    
+    listAllPokemonsUl.innerHTML = ''
+
     const getSearchResults = JSON.parse(localStorage.getItem(LS_KEYS.KEY3)).results.forEach(pokemon => {
-        if(pokemon.name.includes(searchBarForPokemons.value)) {
-            listAllPokemonsUl.innerHTML = ''
+        console.log('leta efter matchande pokemon', pokemon.name, searchBarForPokemons.value);
+        if(pokemon.name.includes(searchBarForPokemons.value.toLowerCase())) {
             displayAllPokemons(pokemon)
         }
     })
@@ -263,12 +265,14 @@ searchBarForPokemons.addEventListener('keydown', () => {
         SavedPokemonsInfo()
     }
 
+    
+
 })
 
 const SavedPokemonsInfo = async () => {
 
     if(localStorage.getItem(LS_KEYS.KEY3) == null) {
-        const url = `https://pokeapi.co/api/v2/pokemon?limit=1279&offset=0`
+        const url = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`
         const response = await fetch(url, {})
         const data = await response.json()
 
