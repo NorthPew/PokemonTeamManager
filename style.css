@@ -148,6 +148,10 @@ html, body {
     row-gap: 1em;
 }
 
+.add-pokemon-screen {
+    flex-flow: column wrap;
+}
+
 .selected-pokemons, .reserved-pokemons {
     display: grid;
     grid-template-columns: repeat(auto-fit, 13em);
