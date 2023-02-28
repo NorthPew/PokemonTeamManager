@@ -120,10 +120,10 @@ openAddPokemonScreen.addEventListener('click', event => {
 })
 
 
-const LS_KEYS = {
-    KEY2: 'added-pokemons-to-team',
-    KEY3: 'list-all-searches-for-pokemons',
-    KEY4: 'added-pokemons-to-reserve-team'
+const LS_keys = {
+    key2: 'added-pokemons-to-team',
+    key3: 'list-all-searches-for-pokemons',
+    key4: 'added-pokemons-to-reserve-team'
 }
 
 const savePokemonToUl = document.querySelector('.selected-pokemons')
@@ -141,10 +141,10 @@ const addPokemonToTeam = async urlFromSearch => {
 
         let savedPokemons
 
-        if (localStorage.getItem(LS_KEYS.KEY2) == null) {
+        if (localStorage.getItem(LS_keys.key2) == null) {
             savedPokemons = []
         } else {
-            savedPokemons = JSON.parse(localStorage.getItem(LS_KEYS.KEY2))
+            savedPokemons = JSON.parse(localStorage.getItem(LS_keys.key2))
         }
         
         /*
@@ -162,9 +162,9 @@ const addPokemonToTeam = async urlFromSearch => {
 
         const arrayAsString = JSON.stringify(savedPokemons)
     
-        localStorage.setItem(LS_KEYS.KEY2, arrayAsString)
+        localStorage.setItem(LS_keys.key2, arrayAsString)
 
-        addNewPokemonToUl()
+        addAnotherPokemonToTeamUl()
         countTeamMembers()
 
 
@@ -188,10 +188,10 @@ const addPokemonToReserveTeam = async urlFromSearch => {
 
         let savedReservePokemons
 
-        if (localStorage.getItem(LS_KEYS.KEY4) == null) {
+        if (localStorage.getItem(LS_keys.key4) == null) {
             savedReservePokemons = []
         } else {
-            savedReservePokemons = JSON.parse(localStorage.getItem(LS_KEYS.KEY4))
+            savedReservePokemons = JSON.parse(localStorage.getItem(LS_keys.key4))
         }
         
         /*
@@ -207,9 +207,9 @@ const addPokemonToReserveTeam = async urlFromSearch => {
 
         const arrayAsString = JSON.stringify(savedReservePokemons)
     
-        localStorage.setItem(LS_KEYS.KEY4, arrayAsString)
+        localStorage.setItem(LS_keys.key4, arrayAsString)
 
-        addNewReservePokemonToUl()
+        addAnotherPokemonToReserveTeamUl()
         countTeamMembers()
 
 
@@ -234,7 +234,7 @@ const searchBarForPokemons = document.querySelector('#search-for-pokemons')
 searchBarForPokemons.addEventListener('keyup', () => {   
     listAllPokemonsUl.innerHTML = ''
 
-    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEYS.KEY3)).results.forEach(pokemon => {
+    const getSearchResults = JSON.parse(localStorage.getItem(LS_keys.key3)).results.forEach(pokemon => {
         console.log('leta efter matchande pokemon', pokemon.name, searchBarForPokemons.value);
         if(pokemon.name.includes(searchBarForPokemons.value.toLowerCase())) {
             displayAllPokemons(pokemon)
@@ -251,16 +251,16 @@ searchBarForPokemons.addEventListener('keyup', () => {
 
 const SavedPokemonsInfo = async () => {
 
-    if(localStorage.getItem(LS_KEYS.KEY3) == null) {
+    if(localStorage.getItem(LS_keys.key3) == null) {
         const url = `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`
         const response = await fetch(url, {})
         const data = await response.json()
 
         const dataAsString = JSON.stringify(data)
-        localStorage.setItem(LS_KEYS.KEY3, dataAsString)
+        localStorage.setItem(LS_keys.key3, dataAsString)
 
     } else {
-        let showAllResults = JSON.parse(localStorage.getItem(LS_KEYS.KEY3)).results
+        let showAllResults = JSON.parse(localStorage.getItem(LS_keys.key3)).results
 
         for (let pokemon of showAllResults) {
             displayAllPokemons(pokemon)
@@ -268,16 +268,19 @@ const SavedPokemonsInfo = async () => {
     }
 }
 
-const displayAllPokemons = pokemon => {
+const displayAllPokemons = async pokemon => {
     let newListElem = document.createElement('li'), newImageElem = document.createElement('img'), newNameElem = document.createElement('legend'), newButtonElem = document.createElement('button'), newAddReservePokemonButton = document.createElement('button')
             
 
     let modifiedURL = pokemon.url.substring(34).replace('/', '.png')
-    try {
-        newImageElem.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${modifiedURL}`
-    } catch {
-        newImageElem.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${modifiedURL}`
-    }
+    
+    const url = pokemon.url
+
+    const response = await fetch(url, {})
+
+    const data = await response.json()
+
+    newImageElem.src = data.sprites.front_default
 
     newNameElem.textContent = pokemon.name
 
@@ -304,14 +307,16 @@ const displayAllPokemons = pokemon => {
 
 SavedPokemonsInfo()
 
-const addNewPokemonToUl = () => {
+let overlay = document.querySelector('.overlay')
+
+const addAnotherPokemonToTeamUl = () => {
 
     // Gör så att det blir inga dubbletter
     savePokemonToUl.innerHTML = ''
 
 
     // Denna gör så att man kan få värderna från localstorage och applicerar dem på en lista (ul)
-    for (let pokemon of JSON.parse(localStorage.getItem(LS_KEYS.KEY2))) {
+    for (let pokemon of JSON.parse(localStorage.getItem(LS_keys.key2))) {
 
         // Variabler
         let newLi = document.createElement('li')
@@ -323,7 +328,11 @@ const addNewPokemonToUl = () => {
 
         // Knappar
         let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemonInput = document.createElement('button'),
-        movePokemonToReserves = document.createElement('button')
+        movePokemonToReserves = document.createElement('button'), showAllMovesModal = document.createElement('div'), showAllMovesButton = document.createElement('button'), showNameAgain = document.createElement('h2'), showCloseButton = document.createElement('button')
+
+        showAllMovesModal.classList.add('modal', 'hidden')
+
+        showCloseButton.textContent = 'X'
 
         let emptyDiv = document.createElement('div')
 
@@ -342,7 +351,7 @@ const addNewPokemonToUl = () => {
         changeOrderToTop.title = 'Move to top'
 
         changeNameOfPokemonInput.innerHTML = `<span class="material-symbols-outlined">
-        favorite
+        drive_file_rename_outline
         </span>`
         changeNameOfPokemonInput.title = 'Change member name'
 
@@ -350,6 +359,18 @@ const addNewPokemonToUl = () => {
         login
         </span>`
         movePokemonToReserves.title = 'Move to reserves'
+
+        showAllMovesButton.innerHTML = `<span class="material-symbols-outlined">
+        visibility
+        </span>`
+        showAllMovesButton.title = 'Show all moves'
+
+        showAllMovesButton.addEventListener('click', () => {
+            overlay.classList.toggle('hidden')
+            showAllMovesModal.classList.remove('hidden')
+        })
+
+
         // Ta bort pokemon från ul listan och från localstorage och sparar den nya listan istället
         deleteButton.addEventListener('click', () => {
             newLi.remove()
@@ -358,11 +379,11 @@ const addNewPokemonToUl = () => {
             tooManyPokemonsErrorMSG()
             alertMSG.classList.add('hidden')
 
-            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.nickname !== newNameHeading.textContent)
+            const saveFilterResult = JSON.parse(localStorage.getItem(LS_keys.key2)).filter(result => result.nickname !== newNameHeading.textContent)
 
             const saveNewString = JSON.stringify(saveFilterResult)
 
-            localStorage.setItem(LS_KEYS.KEY2, saveNewString)
+            localStorage.setItem(LS_keys.key2, saveNewString)
 
             tooManyInTeamErrorMSG.classList.add('hidden')
 
@@ -376,11 +397,11 @@ const addNewPokemonToUl = () => {
             addPokemonToReserveTeam(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             alertMSG.classList.add('hidden')
 
-            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.nickname !== newNameHeading.textContent)
+            const saveFilterResult = JSON.parse(localStorage.getItem(LS_keys.key2)).filter(result => result.nickname !== newNameHeading.textContent)
 
             const saveNewString = JSON.stringify(saveFilterResult)
 
-            localStorage.setItem(LS_KEYS.KEY2, saveNewString)
+            localStorage.setItem(LS_keys.key2, saveNewString)
 
             tooManyInTeamErrorMSG.classList.add('hidden')
         })
@@ -395,25 +416,25 @@ const addNewPokemonToUl = () => {
                 changeNameInput.addEventListener('keydown', event => {
                     if(event.key == 'Enter') {
                         if (changeNameInput.value !== '') {
-                            let parseLS = JSON.parse(localStorage.getItem(LS_KEYS.KEY2))
+                            let parseLS = JSON.parse(localStorage.getItem(LS_keys.key2))
 
                             let filterAndChangeNickname = parseLS.filter(result => result.nickname = changeNameInput.value) 
 
                             const newNicknameToSave = JSON.stringify(filterAndChangeNickname)
 
-                            localStorage.setItem(LS_KEYS.KEY2, newNicknameToSave)
+                            localStorage.setItem(LS_keys.key2, newNicknameToSave)
 
                             newNameHeading.textContent = changeNameInput.value
 
                             changeNameInput.remove()
                         } else {
-                            let parseLS = JSON.parse(localStorage.getItem(LS_KEYS.KEY2))
+                            let parseLS = JSON.parse(localStorage.getItem(LS_keys.key2))
 
                             let filterAndChangeNickname = parseLS.filter(result => result.nickname = result.name) 
 
                             const newNicknameToSave = JSON.stringify(filterAndChangeNickname)
 
-                            localStorage.setItem(LS_KEYS.KEY2, newNicknameToSave)
+                            localStorage.setItem(LS_keys.key2, newNicknameToSave)
 
                             newNameHeading.textContent = pokemon.name
 
@@ -444,18 +465,37 @@ const addNewPokemonToUl = () => {
 
         newSprite.src = pokemon.sprites.front_default
 
-        newLi.append(newSprite, newNameHeading)
+        newLi.append(newSprite, newNameHeading, showAllMovesModal)
 
 
         // En typ av funktion som sätter dit alla abilities i en lista
         pokemon.abilities.forEach(element => {
-            let newAbilitiesLegend = document.createElement('legend')
+            let newAbilityLegend = document.createElement('legend')
     
-            newAbilitiesLegend.textContent = element.ability.name
-            newLi.append(newAbilitiesLegend)
+            newAbilityLegend.textContent = element.ability.name
+            newLi.append(newAbilityLegend)
         });
 
-        newLi.append(deleteButton, changeNameOfPokemonInput, changeOrderToTop, changeOrderToBottom, movePokemonToReserves, emptyDiv)
+        // En typ av funktion som sätter dit alla moves i en lista
+        pokemon.moves.forEach(element => {
+                let newMoveLegend = document.createElement('legend')
+
+                showNameAgain.textContent = pokemon.nickname
+
+
+                newMoveLegend.textContent = element.move.name
+                showAllMovesModal.prepend(showNameAgain)
+                showNameAgain.append(showCloseButton)
+                showAllMovesModal.append(newMoveLegend)
+                overlay.append(showAllMovesModal)
+
+                showCloseButton.addEventListener('click', () => {
+                    overlay.classList.add('hidden')
+                    showAllMovesModal.classList.add('hidden')
+                })
+         });
+
+        newLi.append(deleteButton, showAllMovesButton, changeNameOfPokemonInput, changeOrderToTop, changeOrderToBottom, movePokemonToReserves, emptyDiv)
         
         savePokemonToUl.append(newLi)
     }
@@ -463,14 +503,14 @@ const addNewPokemonToUl = () => {
 
 const tooManyInTeamErrorMSG = document.querySelector('#error-too-many-pokemons')
 
-const addNewReservePokemonToUl = () => {
+const addAnotherPokemonToReserveTeamUl = () => {
 
     // Gör så att det blir inga dubbletter
     saveReservePokemonToUl.innerHTML = ''
 
 
     // Denna gör så att man kan få värderna från localstorage och applicerar dem på en lista (ul)
-    for (let pokemon of JSON.parse(localStorage.getItem(LS_KEYS.KEY4))) {
+    for (let pokemon of JSON.parse(localStorage.getItem(LS_keys.key4))) {
 
         // Variabler
         let newLi = document.createElement('li')
@@ -518,11 +558,11 @@ const addNewReservePokemonToUl = () => {
             tooManyPokemonsErrorMSG()
             alertMSG.classList.add('hidden')
 
-            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY4)).filter(result => result.name !== newNameHeading.textContent)
+            const saveFilterResult = JSON.parse(localStorage.getItem(LS_keys.key4)).filter(result => result.name !== newNameHeading.textContent)
 
             const saveNewString = JSON.stringify(saveFilterResult)
 
-            localStorage.setItem(LS_KEYS.KEY4, saveNewString)
+            localStorage.setItem(LS_keys.key4, saveNewString)
 
         })
 
@@ -536,11 +576,11 @@ const addNewReservePokemonToUl = () => {
                 addPokemonToTeam(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
                 alertMSG.classList.add('hidden')
     
-                const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY4)).filter(result => result.name !== newNameHeading.textContent)
+                const saveFilterResult = JSON.parse(localStorage.getItem(LS_keys.key4)).filter(result => result.name !== newNameHeading.textContent)
     
                 const saveNewString = JSON.stringify(saveFilterResult)
     
-                localStorage.setItem(LS_KEYS.KEY4, saveNewString)
+                localStorage.setItem(LS_keys.key4, saveNewString)
 
                 tooManyInTeamErrorMSG.classList.add('hidden')
             } else {
@@ -613,13 +653,13 @@ const addNewReservePokemonToUl = () => {
 }
 
 // Gör så att listan ska visas
-if(localStorage.getItem(LS_KEYS.KEY2) !== null){
-    addNewPokemonToUl()
+if(localStorage.getItem(LS_keys.key2) !== null){
+    addAnotherPokemonToTeamUl()
 }
 
 // Gör så att listan ska visas
-if(localStorage.getItem(LS_KEYS.KEY4) !== null){
-    addNewReservePokemonToUl()
+if(localStorage.getItem(LS_keys.key4) !== null){
+    addAnotherPokemonToReserveTeamUl()
 }
 
 const closeButtonForAddPokemonScreen = document.querySelector('#close-button-add-pokemon-screen')

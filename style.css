@@ -293,6 +293,26 @@ html, body {
     display: inline-block;
 }
 
+.modal {
+    width: 80vw;
+    height: 500px;
+    position: absolute;
+    background-color: #f1f1f1;
+    overflow-y: scroll;
+}
+
+.overlay {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(000, 000, 000, .7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @media (orientation:landscape) {
     .action-panel {
         grid-template-columns: repeat(auto-fit, 50vw);
