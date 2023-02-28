@@ -121,9 +121,9 @@ openAddPokemonScreen.addEventListener('click', event => {
 
 
 const LS_KEYS = {
-    KEY2: 'saving-pokemon',
-    KEY3: 'list-all-pokemons',
-    KEY4: 'list-all-reserves'
+    KEY2: 'added-pokemons-to-team',
+    KEY3: 'list-all-searches-for-pokemons',
+    KEY4: 'added-pokemons-to-reserve-team'
 }
 
 const savePokemonToUl = document.querySelector('.selected-pokemons')
@@ -132,7 +132,7 @@ const saveReservePokemonToUl = document.querySelector('.reserved-pokemons')
 const errorMSG = document.querySelector('#error-too-many-selected-pokemons')
 const alertMSG = document.querySelector('#alert-selected-pokemons')
 
-const addSearchResultToSavePokemon = async urlFromSearch => {
+const addPokemonToTeam = async urlFromSearch => {
     if (savePokemonToUl.childElementCount < 3) {
         const url = urlFromSearch
 
@@ -156,6 +156,8 @@ const addSearchResultToSavePokemon = async urlFromSearch => {
         }
         */
 
+        data['nickname'] = data.name
+
         savedPokemons.push(data)
 
         const arrayAsString = JSON.stringify(savedPokemons)
@@ -178,7 +180,7 @@ const addSearchResultToSavePokemon = async urlFromSearch => {
     }
 } 
 
-const addSearchResultsToSaveReservePokemon = async urlFromSearch => {
+const addPokemonToReserveTeam = async urlFromSearch => {
         const url = urlFromSearch
 
         const response = await fetch(url, {})
@@ -229,29 +231,7 @@ const tooManyPokemonsErrorMSG = () => {
 const listAllPokemonsUl = document.querySelector('#list-all-pokemons')
 
 const searchBarForPokemons = document.querySelector('#search-for-pokemons')
-searchBarForPokemons.addEventListener('keyup', () => {
-   /*
-    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results.filter(searchForPokemon => {
-        if (searchForPokemon.name.match(searchBarForPokemons.value.toLowerCase()))  {
-            listAllPokemonsUl.innerHTML = ''
-            let newListElem = document.createElement('li')
-            newListElem.textContent = searchForPokemon.name
-            listAllPokemonsUl.append(newListElem)
-        } 
-    })
-    */
-/*
-    const getSearchResults = JSON.parse(localStorage.getItem(LS_KEY3)).results
-    for (let pokemon of getSearchResults) {
-        if(pokemon.name.match(searchBarForPokemons.value))  {
-            listAllPokemonsUl.innerHTML = ''
-            let newListElem = document.createElement('li')
-            newListElem.textContent = pokemon.name
-            listAllPokemonsUl.append(newListElem)
-        }
-    }
-    */
-   
+searchBarForPokemons.addEventListener('keyup', () => {   
     listAllPokemonsUl.innerHTML = ''
 
     const getSearchResults = JSON.parse(localStorage.getItem(LS_KEYS.KEY3)).results.forEach(pokemon => {
@@ -261,7 +241,7 @@ searchBarForPokemons.addEventListener('keyup', () => {
         }
     })
 
-    if (searchBarForPokemons.value == '' - length ) {
+    if (searchBarForPokemons.value == null) {
         SavedPokemonsInfo()
     }
 
@@ -311,11 +291,11 @@ const displayAllPokemons = pokemon => {
     newAddReservePokemonButton.title = 'Add reserve'
 
     newButtonElem.addEventListener('click', event => {
-        addSearchResultToSavePokemon(pokemon.url)
+        addPokemonToTeam(pokemon.url)
     })
 
     newAddReservePokemonButton.addEventListener('click', () => {
-        addSearchResultsToSaveReservePokemon(pokemon.url)
+        addPokemonToReserveTeam(pokemon.url)
     })
     
     newListElem.append(newImageElem, newNameElem, newButtonElem, newAddReservePokemonButton)
@@ -342,7 +322,7 @@ const addNewPokemonToUl = () => {
 
 
         // Knappar
-        let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button'),
+        let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemonInput = document.createElement('button'),
         movePokemonToReserves = document.createElement('button')
 
         let emptyDiv = document.createElement('div')
@@ -361,10 +341,10 @@ const addNewPokemonToUl = () => {
         </span>`
         changeOrderToTop.title = 'Move to top'
 
-        changeNameOfPokemon.innerHTML = `<span class="material-symbols-outlined">
+        changeNameOfPokemonInput.innerHTML = `<span class="material-symbols-outlined">
         favorite
         </span>`
-        changeNameOfPokemon.title = 'Change member name'
+        changeNameOfPokemonInput.title = 'Change member name'
 
         movePokemonToReserves.innerHTML = `<span class="material-symbols-outlined">
         login
@@ -378,7 +358,7 @@ const addNewPokemonToUl = () => {
             tooManyPokemonsErrorMSG()
             alertMSG.classList.add('hidden')
 
-            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.name !== newNameHeading.textContent)
+            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.nickname !== newNameHeading.textContent)
 
             const saveNewString = JSON.stringify(saveFilterResult)
 
@@ -393,7 +373,7 @@ const addNewPokemonToUl = () => {
 
             countTeamMembers()
             tooManyPokemonsErrorMSG()
-            addSearchResultsToSaveReservePokemon(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+            addPokemonToReserveTeam(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             alertMSG.classList.add('hidden')
 
             const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.name !== newNameHeading.textContent)
@@ -405,7 +385,7 @@ const addNewPokemonToUl = () => {
             tooManyInTeamErrorMSG.classList.add('hidden')
         })
 
-        changeNameOfPokemon.addEventListener('click', () => {
+        changeNameOfPokemonInput.addEventListener('click', () => {
             let changeNameInput
             if (emptyDiv.childElementCount < 1) {
                 changeNameInput = document.createElement('input')
@@ -415,11 +395,26 @@ const addNewPokemonToUl = () => {
                 changeNameInput.addEventListener('keydown', event => {
                     if(event.key == 'Enter') {
                         if (changeNameInput.value !== '') {
-                            console.log(changeNameInput.value);
-                            newNameHeading.textContent = `"${changeNameInput.value}"`
+                            let parseLS = JSON.parse(localStorage.getItem(LS_KEYS.KEY2))
+
+                            let filterAndChangeNickname = parseLS.filter(result => result.nickname = changeNameInput.value) 
+
+                            const newNicknameToSave = JSON.stringify(filterAndChangeNickname)
+
+                            localStorage.setItem(LS_KEYS.KEY2, newNicknameToSave)
+
+                            newNameHeading.textContent = changeNameInput.value
 
                             changeNameInput.remove()
                         } else {
+                            let parseLS = JSON.parse(localStorage.getItem(LS_KEYS.KEY2))
+
+                            let filterAndChangeNickname = parseLS.filter(result => result.nickname = result.name) 
+
+                            const newNicknameToSave = JSON.stringify(filterAndChangeNickname)
+
+                            localStorage.setItem(LS_KEYS.KEY2, newNicknameToSave)
+
                             newNameHeading.textContent = pokemon.name
 
                             changeNameInput.remove()
@@ -445,7 +440,7 @@ const addNewPokemonToUl = () => {
 
 
         // Gör så att man kan få namnet och bilden för en specifik pokemon
-        newNameHeading.textContent = pokemon.name
+        newNameHeading.textContent = pokemon.nickname
 
         newSprite.src = pokemon.sprites.front_default
 
@@ -460,7 +455,7 @@ const addNewPokemonToUl = () => {
             newLi.append(newAbilitiesLegend)
         });
 
-        newLi.append(deleteButton, changeNameOfPokemon, changeOrderToTop, changeOrderToBottom, movePokemonToReserves, emptyDiv)
+        newLi.append(deleteButton, changeNameOfPokemonInput, changeOrderToTop, changeOrderToBottom, movePokemonToReserves, emptyDiv)
         
         savePokemonToUl.append(newLi)
     }
@@ -538,7 +533,7 @@ const addNewReservePokemonToUl = () => {
 
                 countTeamMembers()
                 tooManyPokemonsErrorMSG()
-                addSearchResultToSavePokemon(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+                addPokemonToTeam(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
                 alertMSG.classList.add('hidden')
     
                 const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY4)).filter(result => result.name !== newNameHeading.textContent)
