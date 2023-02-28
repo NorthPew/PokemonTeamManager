@@ -376,7 +376,7 @@ const addNewPokemonToUl = () => {
             addPokemonToReserveTeam(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
             alertMSG.classList.add('hidden')
 
-            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.name !== newNameHeading.textContent)
+            const saveFilterResult = JSON.parse(localStorage.getItem(LS_KEYS.KEY2)).filter(result => result.nickname !== newNameHeading.textContent)
 
             const saveNewString = JSON.stringify(saveFilterResult)
 

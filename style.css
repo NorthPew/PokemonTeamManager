@@ -141,7 +141,7 @@ html, body {
 .action-panel {
     background-color: #fff;
     border-radius: 15px 15px 0px 0px;
-    grid-template-columns: repeat(auto-fit, 15em);
+    grid-template-columns: repeat(auto-fit, 50vw);
     justify-content: center;
     display: grid;
     height: auto;
@@ -154,11 +154,12 @@ html, body {
 
 .selected-pokemons, .reserved-pokemons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 15em);
-    padding: 0px;
+    grid-template-columns: repeat(auto-fit, min(10em));
     list-style: none;
     justify-content: center;
     overflow: hidden;
+    padding: 0px;
+    margin: 0px;
 }
 
 .selected-pokemons > *, .reserved-pokemons > * {
@@ -214,12 +215,14 @@ html, body {
 #list-all-pokemons {
     overflow: auto;
     overflow-x: hidden;
-    height: 600px;
+    height: calc(100vh - 138px);
     min-width: 320px;
     list-style: none;
     grid-template-columns: repeat(auto-fit, 10em);
     justify-content: center;
     display: grid;
+    margin: 0px;
+    margin-top: 138px;
     padding: 0px;
 }
 
@@ -235,6 +238,17 @@ html, body {
 #list-all-pokemons > * > img {
     height: 96px;
     width: 96px;
+}
+
+.fixed {
+    position: fixed;
+    top: 0px;
+    background-color: #e6e3e3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-flow: column wrap;
+    height: 138px;
 }
 
 
@@ -281,7 +295,7 @@ html, body {
 
 @media (orientation:landscape) {
     .action-panel {
-        grid-template-columns: repeat(auto-fit, 45em);
+        grid-template-columns: repeat(auto-fit, 50vw);
     }
 
     .selected-pokemons, .reserved-pokemons {
@@ -289,6 +303,6 @@ html, body {
     }
 
     .group {
-        width: 45em;
+        width: 50vw;
     }
 }

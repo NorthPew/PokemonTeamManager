@@ -62,14 +62,18 @@
 
         <!-- Add Pokemon Screen -->
         <section class="add-pokemon-screen container panel hidden">
-            <div>
-                <button class="close-button" id="close-button-add-pokemon-screen">X</button>
-                <p>Number of team members:<span id="count-selected-pokemons"> </span> </p>
-            </div>
 
-            <input type="text" class="text-input" placeholder="Write in letters for a pokemon... (Press Enter to update list)" id="search-for-pokemons">
-            <div class="hidden" id="error-too-many-selected-pokemons"><p>Sorry! You can only have 3 members per team!</p></div>
-            <div class="hidden" id="alert-selected-pokemons"><p>Congratz! U have currently 3 members!</p></div>
+            <div class="fixed">
+                <div>
+                    <button class="close-button" id="close-button-add-pokemon-screen">X</button>
+                    <p>Number of team members:<span id="count-selected-pokemons"> </span> </p>
+                </div>
+
+                <input type="text" class="text-input" placeholder="Write in letters for a pokemon... (Press Enter to update list)" id="search-for-pokemons">
+                <div class="hidden" id="error-too-many-selected-pokemons"><p>Sorry! You can only have 3 members per team!</p></div>
+                <div class="hidden" id="alert-selected-pokemons"><p>Congratz! U have currently 3 members!</p></div>
+            </div>
+            
             <ul id="list-all-pokemons">
             </ul>
         </section>
