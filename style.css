@@ -394,4 +394,9 @@ html, body {
     .modal {
         width: 30vw;
     }
+
+    .dialog-text {
+        padding-left: 25px;
+        padding-right: 50px;
+    }
 }

@@ -132,6 +132,8 @@ const saveReservePokemonToUl = document.querySelector('.reserved-pokemons')
 const errorMSG = document.querySelector('#error-too-many-selected-pokemons')
 const alertMSG = document.querySelector('#alert-selected-pokemons')
 
+
+// Gör så att en pokemon kan hamna i huvudlaget, om antalet pokemon är färre än 3
 const addPokemonToTeam = async urlFromSearch => {
     if (savePokemonToUl.childElementCount < 3) {
         const url = urlFromSearch
@@ -164,7 +166,7 @@ const addPokemonToTeam = async urlFromSearch => {
     
         localStorage.setItem(LS_keys.key2, arrayAsString)
 
-        addAnotherPokemonToTeamUl()
+        addAnotherPokemonCardToTeamUl()
         countTeamMembers()
 
 
@@ -180,6 +182,8 @@ const addPokemonToTeam = async urlFromSearch => {
     }
 } 
 
+
+// Gör så att en pokemon kan hamna i reservlaget
 const addPokemonToReserveTeam = async urlFromSearch => {
         const url = urlFromSearch
 
@@ -209,7 +213,7 @@ const addPokemonToReserveTeam = async urlFromSearch => {
     
         localStorage.setItem(LS_keys.key4, arrayAsString)
 
-        addAnotherPokemonToReserveTeamUl()
+        addAnotherPokemonCardToReserveTeamUl()
         countTeamMembers()
 
 
@@ -230,6 +234,8 @@ const tooManyPokemonsErrorMSG = () => {
 
 const listAllPokemonsUl = document.querySelector('#list-all-pokemons')
 
+
+// Sökfunktionen för att hitta rätt pokemon
 const searchBarForPokemons = document.querySelector('#search-for-pokemons')
 searchBarForPokemons.addEventListener('keyup', () => {   
     listAllPokemonsUl.innerHTML = ''
@@ -249,6 +255,8 @@ searchBarForPokemons.addEventListener('keyup', () => {
 
 })
 
+
+// Hämtar data för alla pokemon
 const SavedPokemonsInfo = async () => {
 
     if(localStorage.getItem(LS_keys.key3) == null) {
@@ -268,9 +276,13 @@ const SavedPokemonsInfo = async () => {
     }
 }
 
+
+// Visar all data
 const displayAllPokemons = async pokemon => {
     let newListElem = document.createElement('li'), newImageElem = document.createElement('img'), newNameElem = document.createElement('legend'), newButtonElem = document.createElement('button'), newAddReservePokemonButton = document.createElement('button')
     
+
+    // Fetchar egentligen "bara" bilderna för alla pokemonen
     const url = pokemon.url
 
     const response = await fetch(url, {})
@@ -307,7 +319,9 @@ SavedPokemonsInfo()
 
 let overlay = document.querySelector('.overlay')
 
-const addAnotherPokemonToTeamUl = () => {
+
+// Huvudlaget
+const addAnotherPokemonCardToTeamUl = () => {
 
     // Gör så att det blir inga dubbletter
     savePokemonToUl.innerHTML = ''
@@ -323,15 +337,18 @@ const addAnotherPokemonToTeamUl = () => {
 
         let newNameHeading = document.createElement('h1')
 
-
-        // Knappar
+        // Skapa knappar
         let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemonInput = document.createElement('button'),
-        movePokemonToReserves = document.createElement('button'), showAllMovesModal = document.createElement('div'), showAllMovesButton = document.createElement('button'), showNameAgain = document.createElement('h2'), showCloseButton = document.createElement('button')
+        movePokemonToReserves = document.createElement('button')
+
+        // För Moves modalen
+        let showAllMovesModal = document.createElement('div'),  showNameAgain = document.createElement('h2'), showCloseButton = document.createElement('button'), showAllMovesButton = document.createElement('button')
 
         showAllMovesModal.classList.add('modal', 'hidden')
 
         showCloseButton.textContent = 'X'
 
+        // För namn input
         let emptyDiv = document.createElement('div')
 
         // Namn och ikoner för knapparna
@@ -387,6 +404,8 @@ const addAnotherPokemonToTeamUl = () => {
 
         })
 
+
+        // Flytta pokemon card till reserv gruppen
         movePokemonToReserves.addEventListener('click' ,() => {
             newLi.remove()
 
@@ -404,6 +423,7 @@ const addAnotherPokemonToTeamUl = () => {
             tooManyInTeamErrorMSG.classList.add('hidden')
         })
 
+        // Byta namn på pokemon, funkar bara på main laget
         changeNameOfPokemonInput.addEventListener('click', () => {
             let changeNameInput
             if (emptyDiv.childElementCount < 1) {
@@ -500,7 +520,9 @@ const addAnotherPokemonToTeamUl = () => {
 
 const tooManyInTeamErrorMSG = document.querySelector('#error-too-many-pokemons')
 
-const addAnotherPokemonToReserveTeamUl = () => {
+
+// Reserv laget
+const addAnotherPokemonCardToReserveTeamUl = () => {
 
     // Gör så att det blir inga dubbletter
     saveReservePokemonToUl.innerHTML = ''
@@ -517,11 +539,13 @@ const addAnotherPokemonToReserveTeamUl = () => {
         let newNameHeading = document.createElement('h1')
 
 
-        // Knappar
+        // Knappar för card
         let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button'),
-        movePokemonFromReserves = document.createElement('button'), showAllMovesModal = document.createElement('div'), showAllMovesButton = document.createElement('button'), showNameAgain = document.createElement('h2'), showCloseButton = document.createElement('button')
+        movePokemonFromReserves = document.createElement('button')
 
-        let emptyDiv = document.createElement('div')
+
+        // För modalen
+        let showAllMovesModal = document.createElement('div'), showAllMovesButton = document.createElement('button'), showNameAgain = document.createElement('h2'), showCloseButton = document.createElement('button')
 
         showAllMovesModal.classList.add('modal', 'hidden')
 
@@ -577,6 +601,8 @@ const addAnotherPokemonToReserveTeamUl = () => {
 
         })
 
+
+        // Kollar om man har färre än 3 pokemon i huvudlaget
         movePokemonFromReserves.addEventListener('click' ,() => {
 
             if (savePokemonToUl.childElementCount < 3) {
@@ -601,33 +627,6 @@ const addAnotherPokemonToReserveTeamUl = () => {
             }
 
         })
-
-        changeNameOfPokemon.addEventListener('click', () => {
-            let changeNameInput
-            if (emptyDiv.childElementCount < 1) {
-                changeNameInput = document.createElement('input')
-                changeNameInput.type = 'text'
-                changeNameInput.placeholder = pokemon.name
-                emptyDiv.append(changeNameInput)
-                changeNameInput.addEventListener('keydown', event => {
-                    if(event.key == 'Enter') {
-                        if (changeNameInput.value !== '') {
-                            console.log(changeNameInput.value);
-                            newNameHeading.textContent = `"${changeNameInput.value}"`
-
-                            changeNameInput.remove()
-                        } else {
-                            newNameHeading.textContent = pokemon.name
-
-                            changeNameInput.remove()
-                        }
-                    }
-                })
-            } else {
-                emptyDiv.innerHTML = ''
-            }
-        })
-
 
         // Använder metoden prepend för att få upp ett element först i listan
         changeOrderToTop.addEventListener('click', () => {
@@ -683,14 +682,16 @@ const addAnotherPokemonToReserveTeamUl = () => {
 
 // Gör så att listan ska visas
 if(localStorage.getItem(LS_keys.key2) !== null){
-    addAnotherPokemonToTeamUl()
+    addAnotherPokemonCardToTeamUl()
 }
 
 // Gör så att listan ska visas
 if(localStorage.getItem(LS_keys.key4) !== null){
-    addAnotherPokemonToReserveTeamUl()
+    addAnotherPokemonCardToReserveTeamUl()
 }
 
+
+// Knapp för att stänga av sökpanelen
 const closeButtonForAddPokemonScreen = document.querySelector('#close-button-add-pokemon-screen')
 
 closeButtonForAddPokemonScreen.addEventListener('click', () => {
@@ -699,7 +700,7 @@ closeButtonForAddPokemonScreen.addEventListener('click', () => {
 })
 
 
-
+// En liten funktion som håller reda på antalet pokemon i huvudlaget
 const countTeamMembers = () => {
 const countTeamMembersSpan = document.querySelector('#count-selected-pokemons')
     countTeamMembersSpan.textContent = ` ${savePokemonToUl.childElementCount}`
