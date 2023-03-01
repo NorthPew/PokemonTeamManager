@@ -267,11 +267,19 @@ const SavedPokemonsInfo = async () => {
         const dataAsString = JSON.stringify(data)
         localStorage.setItem(LS_keys.key3, dataAsString)
 
-    } else {
         let showAllResults = JSON.parse(localStorage.getItem(LS_keys.key3)).results
 
         for (let pokemon of showAllResults) {
             displayAllPokemons(pokemon)
+            console.log(pokemon);
+        }
+
+    } else if (localStorage.getItem(LS_keys.key3) !== null) {
+        let showAllResults = JSON.parse(localStorage.getItem(LS_keys.key3)).results
+
+        for (let pokemon of showAllResults) {
+            displayAllPokemons(pokemon)
+            console.log(pokemon);
         }
     }
 }
@@ -346,7 +354,9 @@ const addAnotherPokemonCardToTeamUl = () => {
 
         showAllMovesModal.classList.add('modal', 'hidden')
 
-        showCloseButton.textContent = 'X'
+        showCloseButton.innerHTML = `<span class="material-symbols-outlined">
+        close
+        </span>`
 
         // För namn input
         let emptyDiv = document.createElement('div')
@@ -380,6 +390,8 @@ const addAnotherPokemonCardToTeamUl = () => {
         </span>`
         showAllMovesButton.title = 'Show all moves'
 
+
+        // Visar modalen
         showAllMovesButton.addEventListener('click', () => {
             overlay.classList.toggle('hidden')
             showAllMovesModal.classList.remove('hidden')
@@ -549,7 +561,9 @@ const addAnotherPokemonCardToReserveTeamUl = () => {
 
         showAllMovesModal.classList.add('modal', 'hidden')
 
-        showCloseButton.textContent = 'X'
+        showCloseButton.innerHTML = `<span class="material-symbols-outlined">
+        close
+        </span>`
 
         // Namn och ikoner för knapparna
         deleteButton.innerHTML = `<span class="material-symbols-outlined">remove</span>`
@@ -580,6 +594,7 @@ const addAnotherPokemonCardToReserveTeamUl = () => {
         </span>`
         showAllMovesButton.title = 'Show all moves'
 
+        // Visar modalen
         showAllMovesButton.addEventListener('click', () => {
             overlay.classList.toggle('hidden')
             showAllMovesModal.classList.remove('hidden')

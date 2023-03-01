@@ -230,6 +230,12 @@ html, body {
     border: none;
     border-radius: 7px;
     position: relative;
+    background-color: #e10000;
+    color: #f1f1f1;
+}
+
+.close-button:hover {
+    background-color: #fb0404;
 }
 
 .text-input {
@@ -282,7 +288,7 @@ html, body {
     display: flex;
     justify-content: center;
     flex-flow: column wrap;
-    height: 138px;
+    min-height: 138px;
     box-shadow: var(--shadow-elevation-low);
 }
 
