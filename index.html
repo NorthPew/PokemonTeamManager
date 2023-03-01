@@ -38,10 +38,15 @@
 
         <!-- Game Screen -->
         <section class="game-screen container hidden">
-            <div class="half-container stadium half-container--no-padding">
-                <button class="action-button" id="open-add-pokemon-screen-button"><span class="material-symbols-outlined">add</span></button>
+            <div class="half-container half-container--no-padding container--center">
+                <picture class="picture">
+                    <source srcset="./imgs/stadium.png" media="(orientation: portrait)" width="320px" />
+                    <img style="object-fit: scale-down;" src="./imgs/stadium2.png" with="800px"/>
+                </picture>
+                <button class="action-button" id="open-add-pokemon-screen-button"><span class="material-symbols-outlined">add</span>Add pokemon</button>
             </div>
             <div class="half-container half-container--no-padding half-container--align-unset action-panel">
+                
                 <div class="group">
                     <h1>Ordinary Team</h1>
                     <ul class="selected-pokemons">

@@ -270,9 +270,6 @@ const SavedPokemonsInfo = async () => {
 
 const displayAllPokemons = async pokemon => {
     let newListElem = document.createElement('li'), newImageElem = document.createElement('img'), newNameElem = document.createElement('legend'), newButtonElem = document.createElement('button'), newAddReservePokemonButton = document.createElement('button')
-            
-
-    let modifiedURL = pokemon.url.substring(34).replace('/', '.png')
     
     const url = pokemon.url
 
@@ -281,6 +278,7 @@ const displayAllPokemons = async pokemon => {
     const data = await response.json()
 
     newImageElem.src = data.sprites.front_default
+    newImageElem.alt = pokemon.name
 
     newNameElem.textContent = pokemon.name
 
@@ -478,15 +476,14 @@ const addAnotherPokemonToTeamUl = () => {
 
         // En typ av funktion som sätter dit alla moves i en lista
         pokemon.moves.forEach(element => {
-                let newMoveLegend = document.createElement('legend')
+                let newMoveText = document.createElement('p')
 
                 showNameAgain.textContent = pokemon.nickname
 
 
-                newMoveLegend.textContent = element.move.name
-                showAllMovesModal.prepend(showNameAgain)
-                showNameAgain.append(showCloseButton)
-                showAllMovesModal.append(newMoveLegend)
+                newMoveText.textContent = element.move.name
+                showAllMovesModal.prepend(showCloseButton, showNameAgain)
+                showAllMovesModal.append(newMoveText)
                 overlay.append(showAllMovesModal)
 
                 showCloseButton.addEventListener('click', () => {
@@ -522,9 +519,13 @@ const addAnotherPokemonToReserveTeamUl = () => {
 
         // Knappar
         let deleteButton = document.createElement('button'), changeOrderToTop = document.createElement('button'), changeOrderToBottom = document.createElement('button'), changeNameOfPokemon = document.createElement('button'),
-        movePokemonFromReserves = document.createElement('button')
+        movePokemonFromReserves = document.createElement('button'), showAllMovesModal = document.createElement('div'), showAllMovesButton = document.createElement('button'), showNameAgain = document.createElement('h2'), showCloseButton = document.createElement('button')
 
         let emptyDiv = document.createElement('div')
+
+        showAllMovesModal.classList.add('modal', 'hidden')
+
+        showCloseButton.textContent = 'X'
 
         // Namn och ikoner för knapparna
         deleteButton.innerHTML = `<span class="material-symbols-outlined">remove</span>`
@@ -549,6 +550,16 @@ const addAnotherPokemonToReserveTeamUl = () => {
         logout
         </span>`
         movePokemonFromReserves.title = 'Move Reserve to ordinary team'
+
+        showAllMovesButton.innerHTML = `<span class="material-symbols-outlined">
+        visibility
+        </span>`
+        showAllMovesButton.title = 'Show all moves'
+
+        showAllMovesButton.addEventListener('click', () => {
+            overlay.classList.toggle('hidden')
+            showAllMovesModal.classList.remove('hidden')
+        })
 
         // Ta bort pokemon från ul listan och från localstorage och sparar den nya listan istället
         deleteButton.addEventListener('click', () => {
@@ -646,7 +657,25 @@ const addAnotherPokemonToReserveTeamUl = () => {
             newLi.append(newAbilitiesLegend)
         });
 
-        newLi.append(deleteButton, movePokemonFromReserves)
+        // En typ av funktion som sätter dit alla moves i en lista
+        pokemon.moves.forEach(element => {
+            let newMoveText = document.createElement('p')
+
+            showNameAgain.textContent = pokemon.name
+
+
+            newMoveText.textContent = element.move.name
+            showAllMovesModal.prepend(showCloseButton, showNameAgain)
+            showAllMovesModal.append(newMoveText)
+            overlay.append(showAllMovesModal)
+
+            showCloseButton.addEventListener('click', () => {
+                overlay.classList.add('hidden')
+                showAllMovesModal.classList.add('hidden')
+            })
+     });
+
+        newLi.append(deleteButton, showAllMovesButton, movePokemonFromReserves)
         
         saveReservePokemonToUl.append(newLi)
     }
